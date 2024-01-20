@@ -1,3 +1,4 @@
-*/node_modules/
-*/package-lock.json
-*/prod/
+node_modules/
+package-lock.json
+prod/
+.env
