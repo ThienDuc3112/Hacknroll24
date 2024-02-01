@@ -2,9 +2,10 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
-import searchRoute from "./routes/search";
+import songRoute from "./routes/song";
 import spotify from "spotify-web-api-node";
 import { config } from "dotenv";
+import authRouter from "./routes/auth";
 config();
 
 const app = express();
@@ -31,7 +32,8 @@ const io = new Server(server, {
 
 app.get("/", (req, res) => res.send("up"));
 
-app.use("/song", searchRoute);
+app.use("/song", songRoute);
+app.use("/auth", authRouter);
 
 io.on("connection", (socket) => {
   socket.on("message", (message) => {

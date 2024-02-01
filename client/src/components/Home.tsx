@@ -23,7 +23,13 @@ const Home = () => {
         <button type="submit">Join</button>
       </form>
       <label htmlFor="create">Create a room</label>
-      <button onClick={() => navigate("/new")}>Create</button>
+      <button
+        onClick={() => {
+          window.location.href = `https://accounts.spotify.com/en/authorize?response_type=code&client_id=1f73608c58c94e93ae21affa44f2cf82&scope=user-read-currently-playing%20user-modify-playback-state%20user-read-playback-state&redirect_uri=http://localhost:5173/callback`;
+        }}
+      >
+        Create
+      </button>
     </div>
   );
 };
