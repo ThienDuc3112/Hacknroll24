@@ -17,7 +17,7 @@ const Home = () => {
           name="room"
           value={room}
           onChange={(e) => {
-            setRoom(e.target.value);
+            setRoom(e.target.value.toLowerCase());
           }}
         />
         <button type="submit">Join</button>

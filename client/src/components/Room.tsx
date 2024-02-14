@@ -5,6 +5,10 @@ import { API_URL } from "../public/Constants";
 import SongCard from "./SongCard";
 import { ISong } from "../interfaces/ISong";
 import SongCardSmall from "./SongCardSmall";
+import PlaySVG from "../assets/play-solid.svg";
+import BackwardSVG from "../assets/backward-solid.svg";
+import ForwardSVG from "../assets/forward-solid.svg";
+import AddSVG from "../assets/circle-plus-solid.svg";
 
 const Room = () => {
   const { room } = useParams();
@@ -55,16 +59,32 @@ const Room = () => {
       ) : (
         <p>No song is playing</p>
       )}
-      <button>Last</button>
-      <button>Pause</button>
-      <button>Next</button>
-      <button>Add</button>
+      <img
+        onClick={() => {}}
+        src={BackwardSVG}
+        style={{ width: 40, margin: "0 10px" }}
+      />
+      <img
+        onClick={() => {}}
+        src={PlaySVG}
+        style={{ width: 30, margin: "0 10px" }}
+      />
+      <img
+        onClick={() => {}}
+        src={ForwardSVG}
+        style={{ width: 40, margin: "0 10px" }}
+      />
+      <img
+        onClick={() => {}}
+        src={AddSVG}
+        style={{ width: 40, margin: "0 10px" }}
+      />
       <h2>Up next</h2>
       <p>
-        Due to Spotify API limitation, only up to 20 songs are displayed
+        Due to Spotify API limitation, only maximum of 20 songs can be shown
         <br />
-        Also due to Spotify API limitation, it might display wrong songs / songs
-        that aren't in the queue when there aren't 20 songs
+        For queue shorter than 20 songs, the last few song will be random and
+        aren't in the actual queue
       </p>
       {queue.queue.map((song, index) => (
         <SongCardSmall
@@ -74,7 +94,6 @@ const Room = () => {
       ))}
     </>
   );
-  //   return <Spinner />;
 };
 
 export default Room;

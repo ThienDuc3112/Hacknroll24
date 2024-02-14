@@ -37,7 +37,7 @@ app.use("/song", songRoute);
 app.use("/room", roomRoute);
 
 io.on("connection", (socket) => {
-  console.log(`New connection: ${socket.id}`);
+  console.log(`New connection\t Current count: ${io.engine.clientsCount} `);
   socket.on("connectTo", (room) => socket.join(room));
   socket.on("message", (message) => {
     console.log(message);

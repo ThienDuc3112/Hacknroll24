@@ -6,7 +6,6 @@ import { normalizeQueueSong } from "../helpers/NormalizeQueue";
 const rooms = new Map<string, Room>();
 
 export const createRoom = (req: Request, res: Response) => {
-  console.log(req.body);
   const code = req.body.code;
   if (!code) return res.status(400).send({ message: "No code" });
   let accessToken: string | undefined;
@@ -34,4 +33,18 @@ export const joinRoom = async (req: Request, res: Response) => {
   if (err) return res.status(400).json(err);
   const json = normalizeQueueSong(data);
   res.json(json);
+};
+
+export const skipBackward = async (req: Request, res: Response) => {
+  const roomId = req.params.roomId;
+  if (!rooms.has(roomId)) return res.status(404).send();
+  await rooms.get(roomId)?.spotifyClient.skipToPrevious();
+  return res.status(200).send();
+};
+
+export const skipForward = async (req: Request, res: Response) => {
+  const roomId = req.params.roomId;
+  if (!rooms.has(roomId)) return res.status(404).send();
+  await rooms.get(roomId)?.spotifyClient.skipToNext();
+  return res.status(200).send();
 };
