@@ -1,33 +1,25 @@
+import { msToTimestamp } from "../helpers/msToTimestamp";
+import { ISong } from "../interfaces/ISong";
 import styles from "./SongCard.module.css";
 
-const SongCard = ({
-  id,
-  name,
-  cover,
-  artists,
-  url,
-}: {
-  id: string;
-  name: string;
-  cover: string;
-  artists: string[];
-  url: string;
-}) => {
+const SongCard = ({ id, name, cover, artists, url, duration }: ISong) => {
   id;
   return (
-    <>
-      <a href={url}>
-        <div className={styles.container}>
-          <div className={styles.coverContainer}>
-            <img className={styles.cover} src={cover} />
-          </div>
-          <div className={styles.content}>
-            <h4>{name}</h4>
-            <p>{artists.join(" and ")}</p>
-          </div>
-        </div>
-      </a>
-    </>
+    <div className={styles.container}>
+      <div className={styles.coverContainer}>
+        <img className={styles.cover} src={cover} />
+      </div>
+      <div className={styles.content}>
+        <h4 style={{ marginBottom: 8, marginTop: 8 }}>{name}</h4>
+        <p style={{ marginTop: 0, marginBottom: 0 }}>
+          Artist(s): {artists.join(" and ")}
+        </p>
+        <p style={{ marginTop: 0, marginBottom: 0 }}>
+          Duration:{` ${msToTimestamp(duration)}`}
+        </p>
+        <button onClick={() => window.open(url, "_blank")}>Spotify link</button>
+      </div>
+    </div>
   );
 };
 

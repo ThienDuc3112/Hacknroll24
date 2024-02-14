@@ -1,0 +1,9 @@
+.cover {
+  height: 60px;
+  width: 60px;
+}
+
+.displayRow {
+  display: flex;
+  flex-direction: row;
+}

@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { createRoomController } from "../controllers/roomController";
+import { createRoom, joinRoom } from "../controllers/roomController";
 
 const roomRoute = Router();
 
-roomRoute.get("/new", createRoomController);
+roomRoute.post("/new", createRoom);
+roomRoute.get("/join/:id", joinRoom);
 
 export default roomRoute;

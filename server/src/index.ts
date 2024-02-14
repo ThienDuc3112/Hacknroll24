@@ -1,15 +1,16 @@
-import express from "express";
+import express, { json } from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import songRoute from "./routes/song";
 import spotify from "spotify-web-api-node";
 import { config } from "dotenv";
-import authRouter from "./routes/auth";
+import roomRoute from "./routes/room";
 config();
 
 const app = express();
 app.use(cors());
+app.use(json());
 const PORT = process.env.PORT || 4001;
 app.set("port", PORT);
 const server = http.createServer(app);
@@ -20,10 +21,10 @@ server.listen(PORT, () => {
 export const spotifyWebAPI = new spotify({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_TOKEN,
-  redirectUri: process.env.CLIENT_URL,
+  redirectUri: process.env.REDIRECT_URI,
 });
 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],
@@ -33,9 +34,11 @@ const io = new Server(server, {
 app.get("/", (req, res) => res.send("up"));
 
 app.use("/song", songRoute);
-app.use("/auth", authRouter);
+app.use("/room", roomRoute);
 
 io.on("connection", (socket) => {
+  console.log(`New connection: ${socket.id}`);
+  socket.on("connectTo", (room) => socket.join(room));
   socket.on("message", (message) => {
     console.log(message);
     socket.emit("message", io.engine.clientsCount);
@@ -46,6 +49,12 @@ io.on("connection", (socket) => {
 });
 
 spotifyWebAPI.clientCredentialsGrant().then((data) => {
-  console.log(data);
+  console.log(data.body);
   spotifyWebAPI.setAccessToken(data.body.access_token);
 });
+setInterval(() => {
+  spotifyWebAPI.clientCredentialsGrant().then((data) => {
+    console.log(data.body);
+    spotifyWebAPI.setAccessToken(data.body.access_token);
+  });
+}, 3600_000 - 100);

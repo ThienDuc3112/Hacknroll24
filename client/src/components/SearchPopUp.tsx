@@ -2,18 +2,11 @@ import { useEffect, useState } from "react";
 import styles from "./SearchPopUp.module.css";
 import { API_URL } from "../public/Constants";
 import SongCard from "./SongCard";
+import { ISong } from "../interfaces/ISong";
 let timeout: NodeJS.Timeout;
 const SearchPopUp = () => {
   const [songName, setSongName] = useState("");
-  const [songs, setSongs] = useState(
-    [] as {
-      id: string;
-      name: string;
-      cover: string;
-      artists: string[];
-      url: string;
-    }[]
-  );
+  const [songs, setSongs] = useState([] as ISong[]);
   const fetchSongs = (songName: string) => {
     clearTimeout(timeout);
     if (songName.length == 0) return;
