@@ -1,11 +1,20 @@
+import { MouseEventHandler } from "react";
 import { msToTimestamp } from "../helpers/msToTimestamp";
 import { ISong } from "../interfaces/ISong";
 import styles from "./SongCard.module.css";
 
-const SongCard = ({ id, name, cover, artists, url, duration }: ISong) => {
+const SongCard = ({
+  id,
+  name,
+  cover,
+  artists,
+  url,
+  duration,
+  onClick,
+}: ISong & { onClick?: MouseEventHandler<HTMLDivElement> }) => {
   id;
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={onClick}>
       <div className={styles.coverContainer}>
         <img className={styles.cover} src={cover} />
       </div>

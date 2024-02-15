@@ -30,6 +30,11 @@ const Home = () => {
       >
         Create
       </button>
+      <p>
+        Note: The host must have Spotify premium to start a room
+        <br />
+        Everyone else however does not
+      </p>
     </div>
   );
 };

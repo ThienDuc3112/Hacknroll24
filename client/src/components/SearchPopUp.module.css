@@ -14,9 +14,9 @@
   align-items: center;
   justify-content: center;
   background-color: antiquewhite;
-  max-height: 80%;
+  height: fit-content;
   box-shadow: 0 0 20px;
-  width: 100%;
+  width: 95%;
   max-width: 650px;
   padding: 10px;
 }

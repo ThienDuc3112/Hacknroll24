@@ -7,9 +7,17 @@ export class Room {
   spotifyClient: SpotifyWebApi;
   updateQueueInterval: NodeJS.Timeout;
   previousQueue: any;
+  expireAt: number;
+  removeSelf: () => any;
 
-  constructor(id: string, accessToken: string, refreshToken: string) {
+  constructor(
+    id: string,
+    accessToken: string,
+    refreshToken: string,
+    remove: () => any
+  ) {
     this.id = id;
+    this.removeSelf = remove;
     this.spotifyClient = new SpotifyWebApi({
       accessToken,
       refreshToken,
@@ -17,18 +25,33 @@ export class Room {
       clientSecret: process.env.SPOTIFY_TOKEN,
       redirectUri: process.env.REDIRECT_URI,
     });
+    this.expireAt = Date.now() + 3_599_000;
     this.updateQueueInterval = setInterval(async () => {
+      if (Date.now() > this.expireAt) return this.destroy();
       const [data, err] = await this.getQueue<any>();
       if (
         !err &&
-        JSON.stringify(normalizeQueueSong(data)) !=
-          JSON.stringify(this.previousQueue)
+        JSON.stringify({
+          ...normalizeQueueSong(data),
+          expireAt: this.expireAt,
+        }) != JSON.stringify(this.previousQueue)
       ) {
         // Condition here
-        this.previousQueue = normalizeQueueSong(data);
-        io.to(this.id).emit("updateQueue", this.previousQueue);
+        this.previousQueue = {
+          ...normalizeQueueSong(data),
+          expireAt: this.expireAt,
+        };
+        io.to(this.id).emit("updateQueue", {
+          ...this.previousQueue,
+          expireAt: this.expireAt,
+        });
       }
-    }, 2500);
+    }, 1000);
+  }
+  async refresh() {
+    const res = await this.spotifyClient.refreshAccessToken();
+    this.spotifyClient.setAccessToken(res.body.access_token);
+    this.expireAt = Date.now() + 3_600_000;
   }
   getAccessToken() {
     return this.spotifyClient.getAccessToken();
@@ -54,5 +77,8 @@ export class Room {
   }
   destroy() {
     clearInterval(this.updateQueueInterval);
+    this.removeSelf();
+    io.to(this.id).emit("roomDestroyed");
+    io.to(this.id).disconnectSockets();
   }
 }
