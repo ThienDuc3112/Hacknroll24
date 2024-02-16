@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_URL } from "../public/Constants";
+import Spinner from "./Spinner";
 
 const Create = () => {
   const [searchParam] = useSearchParams();
@@ -26,7 +27,7 @@ const Create = () => {
       });
   }, []);
   if (error) return <p>Error</p>;
-  return <div>{code}</div>;
+  return <Spinner></Spinner>;
 };
 
 export default Create;

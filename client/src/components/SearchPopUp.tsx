@@ -20,11 +20,13 @@ const SearchPopUp = ({
     clearTimeout(timeout);
     if (songName.length == 0) return;
     timeout = setTimeout(() => {
-      fetch(`${API_URL}/song/search/${songName}`).then((res) => {
-        if (res.ok) {
-          res.json().then((data) => setSongs(data));
+      fetch(`${API_URL}/song/search/${encodeURIComponent(songName)}`).then(
+        (res) => {
+          if (res.ok) {
+            res.json().then((data) => setSongs(data));
+          }
         }
-      });
+      );
     }, 1000);
   };
   useEffect(() => {
@@ -73,17 +75,26 @@ const SearchPopUp = ({
                   key={song.id}
                   {...song}
                   onClick={() => {
-                    console.log("Click");
                     fetch(`${API_URL}/room/${room}/add`, {
                       method: "POST",
                       headers: {
                         "Content-type": "Application/json",
                       },
                       body: JSON.stringify({ song: song.id }),
-                    }).finally(() => {
-                      setSongName("");
-                      close();
-                    });
+                    })
+                      .then((res) => {
+                        if (!res.ok && typeof res.json == "function") {
+                          res
+                            .json()
+                            .then((data) =>
+                              alert(`${data?.body?.error?.message}`)
+                            );
+                        }
+                      })
+                      .finally(() => {
+                        setSongName("");
+                        close();
+                      });
                   }}
                 />
               ))}

@@ -4,7 +4,6 @@ import { ISong } from "../interfaces/song";
 
 export const searchController = async (req: Request, res: Response) => {
   const song = req.params["song"];
-  console.log(song);
   try {
     const data = (await spotifyWebAPI.searchTracks(song)).body;
     res.json(

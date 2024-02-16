@@ -14,7 +14,11 @@ const SongCard = ({
 }: ISong & { onClick?: MouseEventHandler<HTMLDivElement> }) => {
   id;
   return (
-    <div className={styles.container} onClick={onClick}>
+    <div
+      className={styles.container}
+      onClick={onClick}
+      style={onClick ? { cursor: "pointer" } : {}}
+    >
       <div className={styles.coverContainer}>
         <img className={styles.cover} src={cover} />
       </div>

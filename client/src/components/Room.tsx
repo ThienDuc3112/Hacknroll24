@@ -87,7 +87,13 @@ const Room = () => {
       )}
       <img
         onClick={() => {
-          fetch(`${API_URL}/room/${room}/backward`);
+          fetch(`${API_URL}/room/${room}/backward`).then((res) => {
+            if (!res.ok && typeof res.json == "function") {
+              res.json().then((data) => {
+                alert(`${data?.body?.error?.message}`);
+              });
+            }
+          });
         }}
         src={BackwardSVG}
         style={{ width: 40, margin: "0 10px" }}
@@ -95,7 +101,11 @@ const Room = () => {
       />
       <img
         onClick={() => {
-          fetch(`${API_URL}/room/${room}/pp`);
+          fetch(`${API_URL}/room/${room}/pp`).then((res) => {
+            if (!res.ok && typeof res.json == "function") {
+              res.json().then((data) => alert(`${data?.body?.error?.message}`));
+            }
+          });
         }}
         src={PlaySVG}
         style={{ width: 30, margin: "0 10px" }}
@@ -103,7 +113,11 @@ const Room = () => {
       />
       <img
         onClick={() => {
-          fetch(`${API_URL}/room/${room}/forward`);
+          fetch(`${API_URL}/room/${room}/forward`).then((res) => {
+            if (!res.ok && typeof res.json == "function") {
+              res.json().then((data) => alert(`${data?.body?.error?.message}`));
+            }
+          });
         }}
         src={ForwardSVG}
         style={{ width: 40, margin: "0 10px" }}
